@@ -4,7 +4,7 @@
 #
 #
 
-VERSION=%%VERSION
+VERSION=1.2
 DEFAULT_HOSTNAME=`dnsdomainname -f`
 DEFAULT_PREFDIR=/var/wtp/
 DEFAULT_SCRIPTDIR=/var/www/wtp/

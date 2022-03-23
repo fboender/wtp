@@ -1,8 +1,8 @@
-WTP v%%VERSION
+WTP v1.1
 
-Copyright (c) 2002-2003, Ferry Boender <%%EMAIL>
+Copyright (c) 2002-2003, Ferry Boender <f (DOT) boender (AT) electricmonk (DOT) nl>
 
-%%HOMEPAGE
+http://www.electricmonk.nl/?page=wtp
 
 Licensed under the General Public License (GPL), see COPYING file 
 provided with this program.
@@ -148,8 +148,8 @@ Contents of this document
 	Author:
 
 		Ferry Boender
-		email: %%EMAIL
-		%%MYHOMEPAGE
+		email: f (DOT) boender (AT) electricmonk (DOT) nl
+		http://www.electricmonk.nl/
 
 	Please report any bugs, request and general comments to the email
 	address stated above.
