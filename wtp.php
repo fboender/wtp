@@ -1,9 +1,9 @@
-<?
-// WTP v%%VERSION
+<?php
+// WTP v1.2
 //  
 // WTP is a Web FTP client.
 //                                                                   
-// Copyright (C) by Ferry Boender <%%EMAIL>
+// Copyright (C) by Ferry Boender <f (DOT) boender (AT) electricmonk (DOT) nl>
 //                                                                   
 
 // This program is free software; you can redistribute it and/or     
@@ -35,6 +35,7 @@
 //            which is accessible to the host on which WTP runs.
 $REF001Hosts = "localhost"; 
 $REF002PreferenceDir = "/var/wtp/";
+include ("config.php");
 // ----------------------------------------------------------------------------
 
 // DirList()
@@ -242,24 +243,18 @@ function Import ($VarName, $From, $Default = "") {
  */
 
 function Error ($ErrorMsg, $ErrorAct) {
-	?>
-	<script language="javascript">alert ("<?=$ErrorMsg?>");</script>
-	<?
+	echo "<script language=\"javascript\">alert (\"".$ErrorMsg."\");</script>";
 
 	switch ($ErrorAct) {
 		case ERR_BACK:
-			?>
-			<script language="javascript">
+			echo "<script language=\"javascript\">
 				history.go(-1);
-			</script>
-			<?
+			</script>";
 			break;
 		case ERR_CLOSE:
-			?>
-			<script language="javascript">
+			echo "<script language=\"javascript\">
 				self.close();
-			</script>
-			<?
+			</script>";
 		case ERR_EXIT:
 			exit();
 			break;
@@ -310,32 +305,31 @@ function HostIsValid ($Hosts, $Hostname, $Port) {
  */
 function GetLogin($Hosts, $Hostname, $Port, $Username, $RemoteDir="") {
 	HtmlHeader ("Login");
-	?>
-	<br><br>
+        echo "<br><br>
 	<center>
 
-	<a href="%%HOMEPAGE">
-	<font size="3" face="arial black" color="#000000">
-		WTP %%VERSION
+	<a href=\"http://www.electricmonk.nl/?page=wtp\">
+	<font size=\"3\" face=\"arial black\" color=\"#000000\">
+		WTP 1.2
 	</font>
 	</a><br><br>
 	
-	<table bgcolor="#000000" border="0" cellspacing="1" cellpadding="0">
+	<table bgcolor=\"#000000\" border=\"0\" cellspacing=\"1\" cellpadding=\"0\">
 	<tr><td>
-	<table bgcolor="DDDDEE" cellpadding="4" cellspacing="4" border="0">
-		<tr bgcolor="#004f9e"><td colspan="2"><font color="#82c0ff"><b>Log in</b></font></td></tr>
-		<form name="GetLogin" method="post">
-		<input type="hidden" name="Action" value="DirList">
-		<input type="hidden" name="RemoteDir" value="<?=htmlspecialchars($RemoteDir)?>">
-		<tr><td>Hostname : </td><td><?
+	<table bgcolor=\"DDDDEE\" cellpadding=\"4\" cellspacing=\"4\" border=\"0\">
+		<tr bgcolor=\"#004f9e\"><td colspan=\"2\"><font color=\"#82c0ff\"><b>Log in</b></font></td></tr>
+		<form name=\"GetLogin\" method=\"post\">
+		<input type=\"hidden\" name=\"Action\" value=\"DirList\">
+		<input type=\"hidden\" name=\"RemoteDir\" value=\"".htmlspecialchars($RemoteDir)."\">
+		<tr><td>Hostname : </td><td>";
 			// Show one out of 3 different possible Hostname entries 
 			if ($Hosts == "") {
-				?><input class="login" type="text" name="Hostname" value="<?=$Hostname?>"><?
-				?>&nbsp;Port: <input size="5" type="text" name="Port" value="<?=$Port?>"><?
+				echo "<input class=\"login\" type=\"text\" name=\"Hostname\" value=\"".$Hostname."\">";
+				echo "&nbsp;Port: <input size=\"5\" type=\"text\" name=\"Port\" value=\"".$Port."\">";
 			} else
 			if (strchr($Hosts, ';') != "") {
 				// Build a dropdown list of allowed hosts
-				?><select class="login" name="HostnamePort"><?
+				echo "<select class=\"login\" name=\"HostnamePort\">";
 				$AllowedHosts = explode (";", $Hosts);
 				foreach ($AllowedHosts as $AllowedHost) {
 					if ($AllowedHost == $Hostname) {
@@ -343,28 +337,24 @@ function GetLogin($Hosts, $Hostname, $Port, $Username, $RemoteDir="") {
 					} else {
 						$Selected = "";
 					}
-					?><option value="<?=$AllowedHost?>" <?=$Selected?>><?=$AllowedHost?></option><?
+					echo "<option value=\"".$AllowedHost."\" ".$Selected.">".$AllowedHost."</option>";
 				}
-				?></select><?
+				echo "</select>";
 			} else {
-				?>
-				<input type="hidden" name="HostnamePort" value="<?=$Hosts?>">
-				<?=$Hosts?>
-				<?
+				echo "<input type=\"hidden\" name=\"HostnamePort\" value=\"".$Hosts."\">".$Hosts;
 			}
-		?></td></tr>
-		<tr><td>Username : </td><td><input class="login" type="text" name="Username" value="<?=$Username?>"></td></tr>
-		<tr><td>Password : </td><td><input class="login" type="password" name="Password"></td></tr>
-		<tr><td>&nbsp;     </td><td><input class="login" type="submit" value="login"></td></tr>
+		echo "</td></tr>
+		<tr><td>Username : </td><td><input class=\"login\" type=\"text\" name=\"Username\" value=\"".$Username."\"></td></tr>
+		<tr><td>Password : </td><td><input class=\"login\" type=\"password\" name=\"Password\"></td></tr>
+		<tr><td>&nbsp;     </td><td><input class=\"login\" type=\"submit\" value=\"login\"></td></tr>
 	</form>
 	</table>
 	</tr></td></table><br>
-	<a href="%%HOMEPAGE">WTP</a>, &copy; 2002-2003, <a href="%%MHOMEPAGE">Ferry Boender</a> under <a href="http://www.gnu.org/copyleft/gpl.html">GPL</a>
+	<a href=\"http://www.electricmonk.nl/?page=wtp\">WTP</a>, &copy; 2002-2003, <a href=\"%%MHOMEPAGE\">Ferry Boender</a> under <a href=\"http://www.gnu.org/copyleft/gpl.html\">GPL</a>
 	</center>
-	<script language="javascript">
+	<script language=\"javascript\">
 		document.GetLogin.Username.focus();
-	</script>
-	<?
+	</script>";
 	exit();
 }
 
@@ -486,13 +476,11 @@ function DirList($FtpStream, $Username, $Hostname, $RemoteDir, $Bookmarks, $Sort
 	global $SortDirectionInternal;
 	
 	// Confirmation javascript code
-	?>
-	<script>
+	echo "<script>
 		function ConfirmDelete () {
-			return(confirm ("This will delete this file or directory and any underlaying files/directories. Are you sure you want to do this?"));
+			return(confirm (\"This will delete this file or directory and any underlaying files/directories. Are you sure you want to do this?\"));
 		}
-	</script>
-	<?
+	</script>";
 	@$Result = @ftp_chdir ($FtpStream, $RemoteDir);
 	if ($Result == true) {
 		$RemoteFiles = @ftp_rawlist ($FtpStream, "-a");
@@ -603,27 +591,25 @@ function DirList($FtpStream, $Username, $Hostname, $RemoteDir, $Bookmarks, $Sort
 	// Put the files in a table
 	HtmlHeader ("Dir Listing");
 	UserInterfaceHeader($Username, $Hostname, $RemoteDir, $Bookmarks);
-	?>
-	
-	<table width="100%" border="0" cellspacing="0" cellpadding="2">
-	<form target="<?=$_SERVER['PHP_SELF']?>" method="POST">
-	<tr bgcolor="#004f9e">
-		<?
-		?>
-		<td><font color="#82c0ff"><b>Rights</b></font></td>
-		<td><font color="#82c0ff"><b>UID</b></font></td>
-		<td><font color="#82c0ff"><b>GID</b></font></td>
-		<td align="right"><b><a class="lnk_sort" href="wtp.php?Action=DirList&RemoteDir=<?=urlencode($RemoteDir)?>&Sort=size&SortDirection=<?=$SortDirectionSize?>">Size <?=$SortIconSize?></a></b> &nbsp;</td>
-		<td><b><a class="lnk_sort" href="wtp.php?Action=DirList&RemoteDir=<?=urlencode($RemoteDir)?>&Sort=date&SortDirection=<?=$SortDirectionDate?>">Date <?=$SortIconDate?></a></b></td>
-		<td><font color="#82c0ff">&nbsp;</font></td>
-		<td><font color="#82c0ff">&nbsp;</font></td>
-		<td><b><a class="lnk_sort" href="wtp.php?Action=DirList&RemoteDir=<?=urlencode($RemoteDir)?>&Sort=filename&SortDirection=<?=$SortDirectionFilename?>">Filename <?=$SortIconFilename?></a></b></td>
-		<td><font color="#82c0ff"><b>Symlinks to</b></font></td>
-	</tr>
-	<?
-		$DirUp = StripLastDir ($RemoteDir);
-	?>
-	<tr bgcolor="#DDDDEE">
+
+	echo "<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"2\">
+	<form target=\"<".$_SERVER['PHP_SELF']."\" method=\"POST\">
+	<tr bgcolor=\"#004f9e\">";
+
+	echo "<td><font color=\"#82c0ff\"><b>Rights</b></font></td>
+		<td><font color=\"#82c0ff\"><b>UID</b></font></td>
+		<td><font color=\"#82c0ff\"><b>GID</b></font></td>
+		<td align=\"right\"><b><a class=\"lnk_sort\" href=\"wtp.php?Action=DirList&RemoteDir=".urlencode($RemoteDir)."&Sort=size&SortDirection=".$SortDirectionSize."\">Size ".$SortIconSize."</a></b> &nbsp;</td>
+		<td><b><a class=\"lnk_sort\" href=\"wtp.php?Action=DirList&RemoteDir=".urlencode($RemoteDir)."&Sort=date&SortDirection=".$SortDirectionDate."\">Date ".$SortIconDate."</a></b></td>
+		<td><font color=\"#82c0ff\">&nbsp;</font></td>
+		<td><font color=\"#82c0ff\">&nbsp;</font></td>
+		<td><b><a class=\"lnk_sort\" href=\"wtp.php?Action=DirList&RemoteDir=".urlencode($RemoteDir)."&Sort=filename&SortDirection=".$SortDirectionFilename."\">Filename ".$SortIconFilename."</a></b></td>
+		<td><font color=\"#82c0ff\"><b>Symlinks to</b></font></td>
+	</tr>";
+
+	$DirUp = StripLastDir ($RemoteDir);
+
+	echo "<tr bgcolor=\"#DDDDEE\">
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
@@ -631,10 +617,10 @@ function DirList($FtpStream, $Username, $Hostname, $RemoteDir, $Bookmarks, $Sort
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 		<td>&nbsp;</td>
-		<td><a href="wtp.php?Action=DirList&RemoteDir=<?=urlencode($DirUp)?>"><font color="#0000FF"><b>..</b></font></a></td>
+		<td><a href=\"wtp.php?Action=DirList&RemoteDir=".urlencode($DirUp)."\"><font color=\"#0000FF\"><b>..</b></font></a></td>
 		<td>&nbsp;</td>
-	</tr>
-	<?
+	</tr>";
+
 	$RowColor = "#EEEEFF";
 	
 	if ($Result == true) {
@@ -654,50 +640,49 @@ function DirList($FtpStream, $Username, $Hostname, $RemoteDir, $Bookmarks, $Sort
 				) 
 			{
 
-				?><tr bgcolor="<?=$RowColor?>"><?
-				?><td><?=$ParsedRemoteFiles[$i][DIRLIST_RIGHTS]?></td><?
-				?><td><?=$ParsedRemoteFiles[$i][DIRLIST_OWNUID]?></td><?
-				?><td><?=$ParsedRemoteFiles[$i][DIRLIST_OWNGID]?></td><?
-				?><td align="right"><?=number_format($ParsedRemoteFiles[$i][DIRLIST_SIZE])?> &nbsp; </td><?
-				?><td><?=date("d M Y H:i", $ParsedRemoteFiles[$i][DIRLIST_TIMESTAMP])?></td><?
-				?></td><?
-				?><td><?
+				echo "<tr bgcolor=\"".$RowColor."\">";
+				echo "<td>".$ParsedRemoteFiles[$i][DIRLIST_RIGHTS]."</td>";
+				echo "<td>".$ParsedRemoteFiles[$i][DIRLIST_OWNUID]."</td>";
+				echo "<td>".$ParsedRemoteFiles[$i][DIRLIST_OWNGID]."</td>";
+				echo "<td align=\"right\">".number_format($ParsedRemoteFiles[$i][DIRLIST_SIZE])." &nbsp; </td>";
+				echo "<td>".date("d M Y H:i", $ParsedRemoteFiles[$i][DIRLIST_TIMESTAMP])."</td>";
+				echo "</td>";
+				echo "<td>";
 					if ($ParsedRemoteFiles[$i][0][0] == 'd' || ($ParsedRemoteFiles[$i][0][0] == 'l' && ftp_isdir($FtpStream, $RemoteDir.$ParsedRemoteFiles[$i][DIRLIST_FILENAME])) ) {
 						// Nothing
 					} else {
 						// File actions
-						?><input type="checkbox" name="RemoteFiles[]" value="<?=htmlentities($ParsedRemoteFiles[$i][DIRLIST_FILENAME])?>"><?
+						echo "<input type=\"checkbox\" name=\"RemoteFiles[]\" value=\"".htmlentities($ParsedRemoteFiles[$i][DIRLIST_FILENAME])."\">";
 					}
 					
-				?></td><?
-				?><td><?
+				echo "</td>";
+				echo "<td>";
 					if ($ParsedRemoteFiles[$i][0][0] == 'd' || ($ParsedRemoteFiles[$i][0][0] == 'l' && ftp_isdir($FtpStream, $RemoteDir.$ParsedRemoteFiles[$i][DIRLIST_FILENAME])) ) {
 						// Directory actions
-						?><a title="Delete directory and contents" href="wtp.php?Action=DirDel&RemoteDir=<?=urlencode($RemoteDir)?>&RemoteFile=<?=urlencode($RemoteDir)?><?=urlencode($ParsedRemoteFiles[$i][DIRLIST_FILENAME])?>" OnMouseOver="window.status='Delete dir'; return true" OnMouseOut="window.status=''; return true"><img src="images/dirdel.gif" border="0" alt="Delete" OnClick="return(ConfirmDelete())"></a>&nbsp;<?
-						?><a title="Move directory and contents" href="javascript:WinOpen('FileMoveHtml','<?=rawurlencode(rawurlencode($RemoteDir))?>&RemoteFile=<?=rawurlencode(rawurlencode($ParsedRemoteFiles[$i][DIRLIST_FILENAME]))?>')" OnMouseOver="window.status='Move dir'; return true" OnMouseOut="window.status=''; return true"><img src="images/dirmove.gif" border="0" alt="Move"></a>&nbsp;<?
+						echo "<a title=\"Delete directory and contents\" href=\"wtp.php?Action=DirDel&RemoteDir=".urlencode($RemoteDir)."&RemoteFile=".urlencode($RemoteDir).urlencode($ParsedRemoteFiles[$i][DIRLIST_FILENAME])."\" OnMouseOver=\"window.status='Delete dir'; return true\" OnMouseOut=\"window.status=''; return true\"><img src=\"images/dirdel.gif\" border=\"0\" alt=\"Delete\" OnClick=\"return(ConfirmDelete())\"></a>&nbsp;";
+						echo "<a title=\"Move directory and contents\" href=\"javascript:WinOpen('FileMoveHtml','".rawurlencode(rawurlencode($RemoteDir))."&RemoteFile=".rawurlencode(rawurlencode($ParsedRemoteFiles[$i][DIRLIST_FILENAME]))."')\" OnMouseOver=\"window.status='Move dir'; return true\" OnMouseOut=\"window.status=''; return true\"><img src=\"images/dirmove.gif\" border=\"0\" alt=\"Move\"></a>&nbsp;";
 					} else {
 						// File actions
-						?><a title="Delete file" href="wtp.php?Action=FileDel&RemoteDir=<?=urlencode($RemoteDir)?>&RemoteFile=<?=urlencode($RemoteDir)?><?=urlencode($ParsedRemoteFiles[$i][DIRLIST_FILENAME])?>" OnMouseOver="window.status='Delete file'; return true" OnMouseOut="window.status=''; return true"><img src="images/filedel.gif" border="0" alt="Delete" OnClick="return(ConfirmDelete())"></a>&nbsp;<?
-						?><a title="Move file" href="javascript:WinOpen('FileMoveHtml','<?=rawurlencode(rawurlencode($RemoteDir))?>&RemoteFile=<?=rawurlencode(rawurlencode($ParsedRemoteFiles[$i][DIRLIST_FILENAME]))?>')" OnMouseOver="window.status='Move file'; return true" OnMouseOut="window.status=''; return true"><img src="images/filemove.gif" border="0" alt="Move"></a>&nbsp;<?
+						echo "<a title=\"Delete file\" href=\"wtp.php?Action=FileDel&RemoteDir=".urlencode($RemoteDir)."&RemoteFile=".urlencode($RemoteDir).urlencode($ParsedRemoteFiles[$i][DIRLIST_FILENAME])."\" OnMouseOver=\"window.status='Delete file'; return true\" OnMouseOut=\"window.status=''; return true\"><img src=\"images/filedel.gif\" border=\"0\" alt=\"Delete\" OnClick=\"return(ConfirmDelete())\"></a>&nbsp;";
+						echo "<a title=\"Move file\" href=\"javascript:WinOpen('FileMoveHtml','".rawurlencode(rawurlencode($RemoteDir))."&RemoteFile=".rawurlencode(rawurlencode($ParsedRemoteFiles[$i][DIRLIST_FILENAME]))."')\" OnMouseOver=\"window.status='Move file'; return true\" OnMouseOut=\"window.status=''; return true\"><img src=\"images/filemove.gif\" border=\"0\" alt=\"Move\"></a>&nbsp;";
 					}
 					
-				?></td><?
-				?><td><?
+				echo "</td>";
+				echo "<td>";
 					if ($ParsedRemoteFiles[$i][0][0] == 'd' || ($ParsedRemoteFiles[$i][0][0] == 'l' && ftp_isdir($FtpStream, $RemoteDir.$ParsedRemoteFiles[$i][DIRLIST_FILENAME])) ) {
 						// Dir display
-						?><a href="wtp.php?Action=DirList&RemoteDir=<?=urlencode($RemoteDir)?><?=urlencode($ParsedRemoteFiles[$i][DIRLIST_FILENAME])?>/"><font color="#0000FF"><?
+						echo "<a href=\"wtp.php?Action=DirList&RemoteDir=".urlencode($RemoteDir).urlencode($ParsedRemoteFiles[$i][DIRLIST_FILENAME])."/\"><font color=\"#0000FF\">";
 					} else {
 						// File display
-						?><a href="wtp.php?Action=Download&RemoteFile=<?=urlencode($ParsedRemoteFiles[$i][DIRLIST_FILENAME])?>&RemoteDir=<?=urlencode($RemoteDir)?>&FileSize=<?=$ParsedRemoteFiles[$i][DIRLIST_SIZE]?>"><font color="#000000"><?
+						echo "<a href=\"wtp.php?Action=Download&RemoteFile=".urlencode($ParsedRemoteFiles[$i][DIRLIST_FILENAME])."&RemoteDir=".urlencode($RemoteDir)."&FileSize=".$ParsedRemoteFiles[$i][DIRLIST_SIZE]."\"><font color=\"#000000\">";
 					}
 					
-					?><?=htmlentities($ParsedRemoteFiles[$i][DIRLIST_FILENAME])?><?
-					?></font></a><?
+					echo htmlentities($ParsedRemoteFiles[$i][DIRLIST_FILENAME]);
+					echo "</font></a>";
 					
-				?></td><?
-				?><td><?=htmlentities($ParsedRemoteFiles[$i][DIRLIST_SYMLINK])?></td><?
-				?></tr>
-				<?
+				echo "</td>";
+				echo "<td>".htmlentities($ParsedRemoteFiles[$i][DIRLIST_SYMLINK])."</td>";
+				echo "</tr>";
 				if ($RowColor == "#EEEEFF") {
 					$RowColor = "#DDDDEE";
 				} else {
@@ -706,35 +691,31 @@ function DirList($FtpStream, $Username, $Hostname, $RemoteDir, $Bookmarks, $Sort
 			}
 		}
 	} else {
-		?>
-		<tr bgcolor="<?=$RowColor?>">
-		<td colspan="9">
-		<font color="#FF0000">File not found</font> or
-		<font color="#FF0000">Permission denied</font>
+		echo "<tr bgcolor=\"".$RowColor."\">
+		<td colspan=\"9\">
+		<font color=\"#FF0000\">File not found</font> or
+		<font color=\"#FF0000\">Permission denied</font>
 		</td>
-		</tr>
-		<?
+		</tr>";
 	}
-	?>
-	</table>
+	echo "</table>
 	<br>
-	<input type="hidden" name="RemoteDir" value="<?=htmlspecialchars($RemoteDir)?>">
-	<input type="hidden" name="Action" value="FilesDelMove">
-	<table border="0" cellspacing="2" cellpadding="3">
+	<input type=\"hidden\" name=\"RemoteDir\" value=\"".htmlspecialchars($RemoteDir)."\">
+	<input type=\"hidden\" name=\"Action\" value=\"FilesDelMove\">
+	<table border=\"0\" cellspacing=\"2\" cellpadding=\"3\">
 		<tr>
 		<td>
-			<input type="submit" name="SubAction" value="Delete">
+			<input type=\"submit\" name=\"SubAction\" value=\"Delete\">
 		</td>
 		<td>
 		&nbsp;
 		</td>
 		<td>
-			<input type="submit" name="SubAction" value="Move">
+			<input type=\"submit\" name=\"SubAction\" value=\"Move\">
 		</td>
 		</tr>
 	</table>
-	</form>
-	<?
+	</form>";
 	exit();
 }
 
@@ -747,10 +728,9 @@ function DirList($FtpStream, $Username, $Hostname, $RemoteDir, $Bookmarks, $Sort
  * Post     : A html header is generated
  */
 function HtmlHeader ($PageTitle) {
-	?>
-	<html>
+	echo "<html>
 	<head>
-		<title><?=$PageTitle?></title>
+		<title>".$PageTitle."</title>
 		<style>
 			body         { font-family: verdana; font-size: 12px; }
 			td           { font-family: fixed, courier new, courier; font-size: 12px; }
@@ -762,14 +742,13 @@ function HtmlHeader ($PageTitle) {
 			a:visited    { font-family: fixed, courier new, courier; color: #0000FF; font-size: 12px; text-decoration: none;}
 			a.lnk_sort   { font-family: fixed, courier new, courier; color: #D0D0FF; font-size: 12px; text-decoration: none;}
 		</style>
-		<script language="javascript">
+		<script language=\"javascript\">
 			function WinOpen(Action, RemoteDir) {
-				window.open("wtp.php?Action="+Action+"&RemoteDir="+RemoteDir,"WtpPopUp","height=120,width=430,directories=no,location=no,menubar=no,status=yes,toolbar=no,personalbar=no,resizable=yes,scrollbars=yes"); 
+				window.open(\"wtp.php?Action=\"+Action+\"&RemoteDir=\"+RemoteDir,\"WtpPopUp\",\"height=120,width=430,directories=no,location=no,menubar=no,status=yes,toolbar=no,personalbar=no,resizable=yes,scrollbars=yes\"); 
 			}
 		</script>
 	</head>
-	<body topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
-	<?
+	<body topmargin=\"0\" bottommargin=\"0\" leftmargin=\"0\" rightmargin=\"0\" marginheight=\"0\" marginwidth=\"0\">";
 }
 
 /* Outputs HTML code for the toolbar at the top of the screen of the directory 
@@ -788,74 +767,60 @@ function HtmlHeader ($PageTitle) {
 function UserInterfaceHeader ($Username, $Hostname, $RemoteDir, $Bookmarks, $ShowRemoteDir=1) {
 	global $HiddenShow;
 
-	?>
-	<table background="images/toolbar.gif" width="100%" height="34" cellspacing="0" cellpadding="0">
+	echo "<table background=\"images/toolbar.gif\" width=\"100%\" height=\"34\" cellspacing=\"0\" cellpadding=\"0\">
 	<tr>
-	<td align="left"> &nbsp; 
-		<font size="3"><b>WTP</b></font> &nbsp;
-		<a title="Directory up" href="wtp.php?Action=DirList&RemoteDir=<?=urlencode(StripLastDir($RemoteDir))?>" OnMouseOver="window.status='Directory Up'; return true" OnMouseOut="window.status=''; return true"><img src="images/dirup.gif" border="0" alt="Directory Up"></a>
-		<a title="Refresh" href="wtp.php?Action=DirList&RemoteDir=<?=urlencode($RemoteDir)?>" OnMouseOver="window.status='Refresh'; return true" OnMouseOut="window.status=''; return true"><img src="images/refresh.gif" border="0" alt="Refresh"></a>
-		<a title="Show/Hide hidden dirs/files" href="wtp.php?Action=DirList&RemoteDir=<?=urlencode($RemoteDir)?>&HiddenShow=<?=($HiddenShow ^ 1)?>" OnMouseOver="window.status='Show/Hide hidden files'; return true" OnMouseOut="window.status=''; return true"><img src="images/dirhidden.gif" border="0" alt="Show/Hide hidden dirs/files"></a>
-		<a title="Create new directory" href="javascript:WinOpen('DirNewHtml','<?=rawurlencode(rawurlencode($RemoteDir))?>')" OnMouseOver="window.status='Create new directory'; return true" OnMouseOut="window.status=''; return true"><img src="images/dirnew.gif" border="0" alt="Create Directory"></a>
-		<a title="Go to home directory" href="wtp.php?Action=DirList&RemoteDir=" OnMouseOver="window.status='Go to home directory'; return true" OnMouseOut="window.status='Go to home directory'; return true"><img src="images/dirhome.gif" border="0" alt="Go to home directory"></a>
-		<a title="Upload a file" href="javascript:WinOpen('UploadHtml','<?=rawurlencode(rawurlencode($RemoteDir))?>')" OnMouseOver="window.status='Upload a file'; return true" OnMouseOut="window.status=''; return true"><img src="images/upload.gif" border="0" alt="Upload file"></a>
-		<a title="Log out" href="wtp.php?Action=LogOut" OnMouseOver="window.status='Log out'; return true" OnMouseOut="window.status=''; return true"><img src="images/logout.gif" border="0" alt="Logout"></a>
-		<a title="Help" href="wtp.php?Action=Help&RemoteDir=<?=urlencode($RemoteDir)?>" OnMouseOver="window.status='Help'; return true" OnMouseOut="window.status=''; return true"><img src="images/help.gif" border="0" alt="Help"></a>
-	</td>
-	<?
+	<td align=\"left\"> &nbsp; 
+		<font size=\"3\"><b>WTP</b></font> &nbsp;
+		<a title=\"Directory up\" href=\"wtp.php?Action=DirList&RemoteDir=".urlencode(StripLastDir($RemoteDir))."\" OnMouseOver=\"window.status='Directory Up'; return true\" OnMouseOut=\"window.status=''; return true\"><img src=\"images/dirup.gif\" border=\"0\" alt=\"Directory Up\"></a>
+		<a title=\"Refresh\" href=\"wtp.php?Action=DirList&RemoteDir=".urlencode($RemoteDir)."\" OnMouseOver=\"window.status='Refresh'; return true\" OnMouseOut=\"window.status=''; return true\"><img src=\"images/refresh.gif\" border=\"0\" alt=\"Refresh\"></a>
+		<a title=\"Show/Hide hidden dirs/files\" href=\"wtp.php?Action=DirList&RemoteDir=".urlencode($RemoteDir)."&HiddenShow=".($HiddenShow ^ 1)."\" OnMouseOver=\"window.status='Show/Hide hidden files'; return true\" OnMouseOut=\"window.status=''; return true\"><img src=\"images/dirhidden.gif\" border=\"0\" alt=\"Show/Hide hidden dirs/files\"></a>
+		<a title=\"Create new directory\" href=\"javascript:WinOpen('DirNewHtml','".rawurlencode(rawurlencode($RemoteDir))."')\" OnMouseOver=\"window.status='Create new directory'; return true\" OnMouseOut=\"window.status=''; return true\"><img src=\"images/dirnew.gif\" border=\"0\" alt=\"Create Directory\"></a>
+		<a title=\"Go to home directory\" href=\"wtp.php?Action=DirList&RemoteDir=\" OnMouseOver=\"window.status='Go to home directory'; return true\" OnMouseOut=\"window.status='Go to home directory'; return true\"><img src=\"images/dirhome.gif\" border=\"0\" alt=\"Go to home directory\"></a>
+		<a title=\"Upload a file\" href=\"javascript:WinOpen('UploadHtml','".rawurlencode(rawurlencode($RemoteDir))."')\" OnMouseOver=\"window.status='Upload a file'; return true\" OnMouseOut=\"window.status=''; return true\"><img src=\"images/upload.gif\" border=\"0\" alt=\"Upload file\"></a>
+		<a title=\"Log out\" href=\"wtp.php?Action=LogOut\" OnMouseOver=\"window.status='Log out'; return true\" OnMouseOut=\"window.status=''; return true\"><img src=\"images/logout.gif\" border=\"0\" alt=\"Logout\"></a>
+		<a title=\"Help\" href=\"wtp.php?Action=Help&RemoteDir=".urlencode($RemoteDir)."\" OnMouseOver=\"window.status='Help'; return true\" OnMouseOut=\"window.status=''; return true\"><img src=\"images/help.gif\" border=\"0\" alt=\"Help\"></a>
+	</td>";
 	// Bookmarks
 	if ($Bookmarks) {
-		?>
-		<form>
-		<td align="right">
-			<input type="hidden" name="Action" value="DirList">
-			<select name="RemoteDir" OnChange="this.form.submit();">
-				<?
+		echo "<form>
+		<td align=\"right\">
+			<input type=\"hidden\" name=\"Action\" value=\"DirList\">
+			<select name=\"RemoteDir\" OnChange=\"this.form.submit();\">";
 				for ($i = 0; $i < count($Bookmarks); $i++) {
-					?><option value="<?=htmlspecialchars($Bookmarks[$i])?>" 
-					<? // Default selected
+					echo "<option value=\"".htmlspecialchars($Bookmarks[$i])."\"";
+					 // Default selected
 					if ($Bookmarks[$i] == $RemoteDir) {
 						print ("selected");
 					}
-					?>> <?=htmlspecialchars($Bookmarks[$i])?><?
+					echo "> ".htmlspecialchars($Bookmarks[$i]);
 				}
-				?>
-			</select>
-			<input type="submit" value="Go">
+				echo "</select>
+			<input type=\"submit\" value=\"Go\">
 		</td>
-		</form>
-		<?
+		</form>";
 	}
-	?>
-	<form>
-	<td align="right">
-		<input type="hidden" name="Action" value="DirList">
-		<input type="text" name="RemoteDir" value="<?=htmlspecialchars($RemoteDir)?>" size="40">
-		<input type="submit" value="Change dir">
-		<?
+	echo "<form>
+	<td align=\"right\">
+		<input type=\"hidden\" name=\"Action\" value=\"DirList\">
+		<input type=\"text\" name=\"RemoteDir\" value=\"".htmlspecialchars($RemoteDir)."\" size=\"40\">
+		<input type=\"submit\" value=\"Change dir\">";
 		// Show bookmark modifiers
 		if (!@in_array($RemoteDir, $Bookmarks)) {
-			?>
-			<a title="Bookmark current directory" href="wtp.php?Action=BookmarkNew&RemoteDir=<?=urlencode($RemoteDir)?>" OnMouseOver="window.status='Bookmark current dir'; return true" OnMouseOut="window.status=''; return true;">
-			<img src="images/bookmarknew.gif" alt="New Bookmark" border="0">
-			</a>
-			<?
+			echo "<a title=\"Bookmark current directory\" href=\"wtp.php?Action=BookmarkNew&RemoteDir=".urlencode($RemoteDir)."\" OnMouseOver=\"window.status='Bookmark current dir'; return true\" OnMouseOut=\"window.status=''; return true;\">
+			<img src=\"images/bookmarknew.gif\" alt=\"New Bookmark\" border=\"0\">
+			</a>";
 		} else {
-			?>
-			<a title="Remove current dir from bookmarks" href="wtp.php?Action=BookmarkDel&RemoteDir=<?=urlencode($RemoteDir)?>" OnMouseOver="window.status='Remove current dir from bookmarks'; return true" OnMouseOut="window.status=''; return true">
-			<img src="images/bookmarkdel.gif" alt="Delete Bookmark" border="0">
-			</a>
-			<?
+			echo "<a title=\"Remove current dir from bookmarks\" href=\"wtp.php?Action=BookmarkDel&RemoteDir=".urlencode($RemoteDir)." OnMouseOver=\"window.status='Remove current dir from bookmarks'; return true\" OnMouseOut=\"window.status=''; return true\">
+			<img src=\"images/bookmarkdel.gif\" alt=\"Delete Bookmark\" border=\"0\">
+			</a>";
 		}
-		?>
-		&nbsp;
+		echo "&nbsp;
 	</td>
 	</form>
 	</tr>
 	</table>
 
-	<br>
-	<?
+	<br>";
 		if ($ShowRemoteDir == 1) {
 			$Dirs = explode ("/",$RemoteDir);
 			$FullPath = "/";
@@ -866,11 +831,9 @@ function UserInterfaceHeader ($Username, $Hostname, $RemoteDir, $Bookmarks, $Sho
 					$FullPathWithUrls .= "<a href=\"wtp.php?Action=DirList&RemoteDir=".urlencode($FullPath)."\">".htmlspecialchars($Dir)."</a>/";
 				}
 			}
-			?>
-			&nbsp; <b>Current Dir:</b>
-			<?=$Username?>@<?=$Hostname?>:<?=$FullPathWithUrls?>
-			<br><br>
-			<?
+			echo "&nbsp; <b>Current Dir:</b>
+			".$Username."@".$Hostname.":".$FullPathWithUrls."
+			<br><br>";
 		}
 }
 
@@ -941,22 +904,20 @@ function Download ($Hostname, $Port, $Username, $Password, $RemoteDir, $RemoteFi
  */
 function DirNewHtml($RemoteDir) { 
 	HtmlHeader ("Make dir");
-	?>
-	<br>
+	echo "<br>
 	<center>
 	<b>Enter the name of the directory to create:</b><br><br>
-	<form name="newdir" method="post">
-		<input type="hidden" name="Action" value="DirNew">
-		<input type="hidden" name="RemoteDir" value="<?=$RemoteDir?>">
-		&nbsp; <input type="text" name="DirName" value="<?=htmlspecialchars($RemoteDir)?>" size="45">
-		<input type="submit" value="Make Dir">
+	<form name=\"newdir\" method=\"post\">
+		<input type=\"hidden\" name=\"Action\" value=\"DirNew\">
+		<input type=\"hidden\" name=\"RemoteDir\" value=\"".$RemoteDir."\">
+		&nbsp; <input type=\"text\" name=\"DirName\" value=\"".htmlspecialchars($RemoteDir)."\" size=\"45\">
+		<input type=\"submit\" value=\"Make Dir\">
 	</form>
 	<br>
 	</center>
-	<script language="javascript">
+	<script language=\"javascript\">
 		document.newdir.dirname.focus();
-	</script>
-	<?
+	</script>";
 }
 
 /* Creates a new directory
@@ -971,26 +932,20 @@ function DirNewHtml($RemoteDir) {
  */
 function DirNew ($FtpStream, $RemoteDir, $DirName) {
 	$result = @ftp_mkdir ($FtpStream, $DirName);
-	?>
-	<html>
+	echo "<html>
 	<head>
 	</head>
-	<body>
-		<?
+	<body>";
 			if ($result === FALSE) {
 				Error ("Couldn't create directory ".$DirName, ERR_CLOSE);
 			} else {
-				?>
-				<script>
-				opener.location = "wtp.php?Action=DirList&RemoteDir=<?=htmlspecialchars(rawurlencode($DirName))?>";
+				echo "<script>
+				opener.location = \"wtp.php?Action=DirList&RemoteDir=".htmlspecialchars(rawurlencode($DirName))."\";
 				self.close();
-				</script>
-				<?
+				</script>";
 			}
-		?>
-	</body>
-	</html>
-	<?
+		echo "</body>
+	</html>";
 }
 
 /* Shows HTML code for a file upload
@@ -1003,22 +958,20 @@ function DirNew ($FtpStream, $RemoteDir, $DirName) {
  */
 function UploadHtml($RemoteDir) { 
 	HtmlHeader ("Upload file");
-	?>
-	<br>
+	echo "<br>
 	<center>
 	<b>Select a file to upload:</b><br><br>
-	<form name="upload" method="post" ENCTYPE="multipart/form-data" >
-		<input type="hidden" name="Action" value="Upload">
-		<input type="hidden" name="RemoteDir" value="<?=htmlentities($RemoteDir)?>">
-		&nbsp; <input type="file" name="File" value="">
-		<input type="submit" value="Upload">
+	<form name=\"upload\" method=\"post\" ENCTYPE=\"multipart/form-data\" >
+		<input type=\"hidden\" name=\"Action\" value=\"Upload\">
+		<input type=\"hidden\" name=\"RemoteDir\" value=\"".htmlentities($RemoteDir)."\">
+		&nbsp; <input type=\"file\" name=\"File\" value=\"\">
+		<input type=\"submit\" value=\"Upload\">
 	</form>
 	<br>
 	</center>
-	<script language="javascript">
+	<script language=\"javascript\">
 		document.upload.File.focus();
-	</script>
-	<?
+	</script>";
 }
 
 /* Handles an uploaded file
@@ -1038,26 +991,20 @@ function UploadHtml($RemoteDir) {
 function Upload ($FtpStream, $RemoteDir,$File,  $File_name, $File_size, 
                  $File_type) {
 	$result = @ftp_put ($FtpStream, $RemoteDir.$File_name, $File, FTP_BINARY);
-	?>
-	<html>
+	echo "<html>
 	<head>
 	</head>
-	<body>
-		<?
+	<body>";
 			if ($result === FALSE) {
 				Error ("Couldn't upload file ".$File_name, ERR_CLOSE);
 			} else {
-				?>
-				<script>
-				opener.location = 'wtp.php?Action=DirList&RemoteDir=<?=rawurlencode($RemoteDir)?>';
+				echo "<script>
+				opener.location = 'wtp.php?Action=DirList&RemoteDir=".rawurlencode($RemoteDir)."';
 				self.close();
-				</script>
-				<?
+				</script>";
 			}
-		?>
-	</body>
-	</html>
-	<?
+		echo "</body>
+	</html>";
 }
 
 /* Deletes a remote file on the ftp server
@@ -1074,26 +1021,20 @@ function Upload ($FtpStream, $RemoteDir,$File,  $File_name, $File_size,
 function FileDel($FtpStream, $Hostname, $RemoteDir, $RemoteFile) {
 	$result = @ftp_delete ($FtpStream, $RemoteFile);
 
-	?>
-	<html>
+	echo "<html>
 	<head>
 	</head>
-	<body>
-		<?
+	<body>";
 			if ($result === FALSE) {
 				Error ("Couldn't delete file ".$RemoteFile, ERR_NONE);
 			} else {
-				?>
-				<script>
-				opener.location = 'wtp.php?Action=DirList&RemoteDir=<?=rawurlencode($RemoteDir)?>';
+				echo "<script>
+				opener.location = 'wtp.php?Action=DirList&RemoteDir=".rawurlencode($RemoteDir)."';
 				self.close();
-				</script>
-				<?
+				</script>";
 			}
-		?>
-	</body>
-	</html>
-	<?
+		echo "</body>
+	</html>";
 }
 
 function FilesDel ($FtpStream, $Hostname, $RemoteDir, $RemoteFiles) {
@@ -1105,28 +1046,24 @@ function FilesDel ($FtpStream, $Hostname, $RemoteDir, $RemoteFiles) {
 	}
 	if ($ErrorFiles != "") {
 		// Does not use Error() function cause I'm too lazy to make Error() withstand weird chars 
-		?>
-		<script language="javascript">
-			alert ("Couldn't delete the following files: \n\n<?=$ErrorFiles?>\n\nCheck permissions.");
-		</script>
-		<?
+		echo "<script language=\"javascript\">
+			alert (\"Couldn't delete the following files: \n\n".$ErrorFiles."\n\nCheck permissions.\");
+		</script>";
 	}
 }
 function FileMoveHtml ($RemoteDir, $RemoteFile) {
 	HtmlHeader ("Move/Rename file");
-	?>
-	<br>
+	echo "<br>
 	<center>
 	<b>Enter destination path or new filename:</b><br><br>
-	<form method="post">
-		<input type="hidden" name="Action" value="FileMove">
-		<input type="hidden" name="RemoteDir" value="<?=htmlspecialchars($RemoteDir)?>">
-		<input type="hidden" name="RemoteFile" value="<?=htmlspecialchars($RemoteFile)?>">
-		<input type="text" name="Destination" size="35">
-		<input type="submit" value="Move / Rename">
+	<form method=\"post\">
+		<input type=\"hidden\" name=\"Action\" value=\"FileMove\">
+		<input type=\"hidden\" name=\"RemoteDir\" value=\"".htmlspecialchars($RemoteDir)."\">
+		<input type=\"hidden\" name=\"RemoteFile\" value=\"".htmlspecialchars($RemoteFile)."\">
+		<input type=\"text\" name=\"Destination\" size=\"35\">
+		<input type=\"submit\" value=\"Move / Rename\">
 	</form>
-	</center>
-	<?
+	</center>";
 }
 
 function FileMove ($FtpStream, $RemoteDir, $RemoteFile, $Destination) {
@@ -1152,44 +1089,36 @@ function FileMove ($FtpStream, $RemoteDir, $RemoteFile, $Destination) {
 			}
 		}
 	}
-	?>
-	<html>
+	echo "<html>
 	<head>
 	</head>
 	<body>
-		<script>
-		<?
+		<script>";
 			if ($ErrorFiles != "") {
-				?>alert ("Couldn't move the following files: \n\n<?=$ErrorFiles?>\n");<?
+				echo "alert (\"Couldn't move the following files: \n\n".$ErrorFiles."\n\");";
 			}
-		?>
-		opener.location = 'wtp.php?Action=DirList&RemoteDir=<?=htmlspecialchars(rawurlencode($RemoteDir))?>';
+		echo "opener.location = 'wtp.php?Action=DirList&RemoteDir=".htmlspecialchars(rawurlencode($RemoteDir))."';
 		self.close();
 		</script>
 	</body>
-	</html>
-	<?
+	</html>";
 }
 
 function FilesMoveHtml ($RemoteDir, $RemoteFiles) {
 	HtmlHeader ("Move files");
-	?>
-	<br>
+	echo "<br>
 	<center>
 	<b>Enter destination path for files:</b><br><br>
-	<form method="post">
-		<input type="hidden" name="Action" value="FilesMove">
-		<input type="hidden" name="RemoteDir" value="<?=htmlspecialchars($RemoteDir)?>">
-		<?
+	<form method=\"post\">
+		<input type=\"hidden\" name=\"Action\" value=\"FilesMove\">
+		<input type=\"hidden\" name=\"RemoteDir\" value=\"".htmlspecialchars($RemoteDir)."\">";
 			foreach ($RemoteFiles as $RemoteFile) {
-				?><input type="hidden" name="RemoteFiles[]" value="<?=htmlspecialchars($RemoteFile)?>"><?
+				echo "<input type=\"hidden\" name=\"RemoteFiles[]\" value=\"".htmlspecialchars($RemoteFile)."\">";
 			}
-		?>
-		<input type="text" name="Destination" size="35">
-		<input type="submit" value="Move files">
+		echo "<input type=\"text\" name=\"Destination\" size=\"35\">
+		<input type=\"submit\" value=\"Move files\">
 	</form>
-	</center>
-	<?
+	</center>";
 }
 
 function FilesMove ($FtpStream, $RemoteDir, $RemoteFiles, $Destination) {
@@ -1232,11 +1161,9 @@ function FilesMove ($FtpStream, $RemoteDir, $RemoteFiles, $Destination) {
 		
 	if ($ErrorFiles != "") {
 		// Does not use Error() due to possible weird chars 
-		?>
-		<script language="javascript">
-				alert ("Couldn't move the following files: \n\n<?=htmlentities($ErrorFiles)?>\n");
-		</script>
-		<?
+		echo "<script language=\"javascript\">
+				alert (\"Couldn't move the following files: \n\n".htmlentities($ErrorFiles)."\n\");
+		</script>";
 	}
 }
 
@@ -1250,19 +1177,17 @@ function FilesMove ($FtpStream, $RemoteDir, $RemoteFiles, $Destination) {
  */
 function Move ($RemoteDir) { 
 	HtmlHeader ("Move file(s)");
-	?>
-	<br>
+	echo "<br>
 	<center>
 	<b>Enter a destination to which to move file(s):</b><br><br>
-	<form method="post">
-		<input type="hidden" name="Action" value="Move">
-		<input type="hidden" name="RemoteDir" value="<?=$RemoteDir?>">
-		&nbsp; <input type="file" name="File" value="">
-		<input type="submit" value="Upload">
+	<form method=\"post\">
+		<input type=\"hidden\" name=\"Action\" value=\"Move\">
+		<input type=\"hidden\" name=\"RemoteDir\" value=\"".$RemoteDir."\">
+		&nbsp; <input type=\"file\" name=\"File\" value=\"\">
+		<input type=\"submit\" value=\"Upload\">
 	</form>
 	<br>
-	</center>
-	<?
+	</center>";
 }
 
 /* Recursively deletes a remote dir on the ftp server
@@ -1301,11 +1226,9 @@ function DirDelRecursive ($FtpStream, $RemoteDir, $RecursionDepth = 0) {
 		}
 
 		if ($ErrorFiles != "") {
-			?>
-			<script>
-				alert ("The following files and/or directories could not be removed: \n<?=$ErrorFiles?> Check permissions.");
-			</script>
-			<?
+			echo "<script>
+				alert (\"The following files and/or directories could not be removed: \n".$ErrorFiles." Check permissions.\");
+			</script>";
 		}
 	} else {
 		return ($ErrorFiles);
@@ -1326,19 +1249,15 @@ function DirDelRecursive ($FtpStream, $RemoteDir, $RecursionDepth = 0) {
 function DirDel($FtpStream, $RemoteFile) {
 	$result = @ftp_rmdir ($FtpStream, $RemoteFile);
 	
-	?>
-	<html>
+	echo "<html>
 	<head>
 	</head>
-	<body>
-		<?
+	<body>";
 			if ($result === FALSE) {
 				Error ("Couldn't delete directory ".$RemoteFile, ERR_NONE);
 			}
-		?>
-	</body>
-	</html>
-	<?
+		echo "</body>
+	</html>";
 }
 
 /* Checks if a path+(file/dir) is a directory or not.
@@ -1420,10 +1339,9 @@ function BookmarkDel($FtpStream, $PreferenceDir, $Hostname, $Username, &$Bookmar
 function Help ($Username, $Hostname, $RemoteDir, $Bookmarks) {
 	HtmlHeader ("Help");
 	UserInterfaceHeader ($Username, $Hostname, $RemoteDir, $Bookmarks, 0);
-	?>
-		&nbsp; <a href="wtp.php?Action=DirList&RemoteDir=<?=$RemoteDir?>">Back</a>
+	echo "&nbsp; <a href=\"wtp.php?Action=DirList&RemoteDir=".$RemoteDir."\">Back</a>
 		<center>
-		<table width="95%">
+		<table width=\"95%\">
 		<tr><td>
 		
 		<h1>WTP Help</h1>
@@ -1443,42 +1361,42 @@ function Help ($Username, $Hostname, $RemoteDir, $Bookmarks) {
 			</ul><br>
 			It currently only supports unix ftp servers, but support for windows ftp servers is planned. For a full list of confirmed compatibility with certain FTP servers, check the README.
 			
-			<table cellpadding="5">
-			<tr valign="top"><td><b>Author</b></td><td>:</td><td>Ferry Boender &lt;%%EMAIL&gt;</td></tr>
-			<tr valign="top"><td><b>Copyright</b></td><td>:</td><td>WTP is &copy; 2002-2003 by Ferry Boender</td></tr>
-			<tr valign="top"><td><b>License</b></td><td>:</td><td>WTP released under the <a href="http://www.gnu.org/copyleft/gpl.html">GNU General Public License</a><br><br>
+			<table cellpadding=\"5\">
+			<tr valign=\"top\"><td><b>Author</b></td><td>:</td><td>Ferry Boender &lt;f (DOT) boender (AT) electricmonk (DOT) nl&gt;</td></tr>
+			<tr valign=\"top\"><td><b>Copyright</b></td><td>:</td><td>WTP is &copy; 2002-2003 by Ferry Boender</td></tr>
+			<tr valign=\"top\"><td><b>License</b></td><td>:</td><td>WTP released under the <a href=\"http://www.gnu.org/copyleft/gpl.html\">GNU General Public License</a><br><br>
 			This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.<br><br>
 			This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br><br>
 			You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.<br><br>                                                                  
 			For more information, see the COPYING file supplied with this program.
 			</td></tr>
-			<tr valign="top"><td><b>Homepage</b></td><td>:</td><td><a href="%%HOMEPAGE">WTP Homepage</a></td></tr>
+			<tr valign=\"top\"><td><b>Homepage</b></td><td>:</td><td><a href=\"http://www.electricmonk.nl/?page=wtp\">WTP Homepage</a></td></tr>
 			</table>
 			
 
 		</blockquote>
 		<h2>Login screen</h2>
 		<blockquote>
-		<table cellpadding="5">
-			<tr valign="top"><td><b><nobr>WTP vX.Y.Z</nobr></b></td><td>:</td><td>Link to WTP's homepage</td></tr>
-			<tr valign="top"><td><b>Hostname</b></td><td>:</td><td>Here you can enter the domainname of the ftp server you wish to connect to. No 'ftp://' prefix is needed. If it is already prefilled, you can only connect to that hostname. There's no use in changing the entry in that case. </td></tr>
-			<tr valign="top"><td><b>Username</b></td><td>:</td><td>Enter your username here. Case sensitive.</td></tr>
-			<tr valign="top"><td><b>Password</b></td><td>:</td><td>Enter your password here.</td></tr>
+		<table cellpadding=\"5\">
+			<tr valign=\"top\"><td><b><nobr>WTP vX.Y.Z</nobr></b></td><td>:</td><td>Link to WTP's homepage</td></tr>
+			<tr valign=\"top\"><td><b>Hostname</b></td><td>:</td><td>Here you can enter the domainname of the ftp server you wish to connect to. No 'ftp://' prefix is needed. If it is already prefilled, you can only connect to that hostname. There's no use in changing the entry in that case. </td></tr>
+			<tr valign=\"top\"><td><b>Username</b></td><td>:</td><td>Enter your username here. Case sensitive.</td></tr>
+			<tr valign=\"top\"><td><b>Password</b></td><td>:</td><td>Enter your password here.</td></tr>
 		</table>
 		</blockquote>
 		<h2>Icon bar</h2>
 		<blockquote>
-		<table cellpadding="5">
-			<tr valign="top"><td><b><img src="images/dirup.gif" border="0" alt="Dir Up"></b></td><td>Takes you to one higher directory.</td></tr>
-			<tr valign="top"><td><b><img src="images/refresh.gif" border="0" alt="Refresh"></b></td><td>Refreshes the current listing.</td></tr>
-			<tr valign="top"><td><b><img src="images/dirhidden.gif" border="0" alt="Show/Hide hidden files"></b></td><td>Toggles the display of hidden files.</td></tr>
-			<tr valign="top"><td><b><img src="images/dirnew.gif" border="0" alt="Dir New"></b></td><td>Allows you to create a new directory in the current one. Just type in the name of the dir you wish to create, and click the button.</td></tr>
-			<tr valign="top"><td><b><img src="images/dirhome.gif" border="0" alt="Dir Home"></b></td><td>Takes you to the default dir. This is the first dir you saw when you logged in.</td></tr>
-			<tr valign="top"><td><b><img src="images/upload.gif" border="0" alt="Upload"></b></td><td>Presents you with a file upload dialog in which you can pick a file to upload to the current directory</td></tr>
-			<tr valign="top"><td><b><img src="images/logout.gif" border="0" alt="Logout"></b></td><td>Logs you out.</td></tr>
-			<tr valign="top"><td><b><img src="images/help.gif" border="0" alt="Help"></b></td><td>This help screen</td></tr>
-			<tr valign="top"><td><b><img src="images/bookmarknew.gif" border="0" alt="Add bookmark"></b></td><td>Adds a bookmark for the current directory in the bookmarks-dropdown list. If the current directory is already in the bookmark dropdown list, this icon will be red (see next item), and if you click it, the bookmark will be removed.</td></tr>
-			<tr valign="top"><td><b><img src="images/bookmarkdel.gif" border="0" alt="Delete bookmark"></b></td><td>Deletes a bookmark. This button is only shown if the current dir is already a bookmark.</td></tr>
+		<table cellpadding=\"5\">
+			<tr valign=\"top\"><td><b><img src=\"images/dirup.gif\" border=\"0\" alt=\"Dir Up\"></b></td><td>Takes you to one higher directory.</td></tr>
+			<tr valign=\"top\"><td><b><img src=\"images/refresh.gif\" border=\"0\" alt=\"Refresh\"></b></td><td>Refreshes the current listing.</td></tr>
+			<tr valign=\"top\"><td><b><img src=\"images/dirhidden.gif\" border=\"0\" alt=\"Show/Hide hidden files\"></b></td><td>Toggles the display of hidden files.</td></tr>
+			<tr valign=\"top\"><td><b><img src=\"images/dirnew.gif\" border=\"0\" alt=\"Dir New\"></b></td><td>Allows you to create a new directory in the current one. Just type in the name of the dir you wish to create, and click the button.</td></tr>
+			<tr valign=\"top\"><td><b><img src=\"images/dirhome.gif\" border=\"0\" alt=\"Dir Home\"></b></td><td>Takes you to the default dir. This is the first dir you saw when you logged in.</td></tr>
+			<tr valign=\"top\"><td><b><img src=\"images/upload.gif\" border=\"0\" alt=\"Upload\"></b></td><td>Presents you with a file upload dialog in which you can pick a file to upload to the current directory</td></tr>
+			<tr valign=\"top\"><td><b><img src=\"images/logout.gif\" border=\"0\" alt=\"Logout\"></b></td><td>Logs you out.</td></tr>
+			<tr valign=\"top\"><td><b><img src=\"images/help.gif\" border=\"0\" alt=\"Help\"></b></td><td>This help screen</td></tr>
+			<tr valign=\"top\"><td><b><img src=\"images/bookmarknew.gif\" border=\"0\" alt=\"Add bookmark\"></b></td><td>Adds a bookmark for the current directory in the bookmarks-dropdown list. If the current directory is already in the bookmark dropdown list, this icon will be red (see next item), and if you click it, the bookmark will be removed.</td></tr>
+			<tr valign=\"top\"><td><b><img src=\"images/bookmarkdel.gif\" border=\"0\" alt=\"Delete bookmark\"></b></td><td>Deletes a bookmark. This button is only shown if the current dir is already a bookmark.</td></tr>
 		</table>
 		</blockquote>
 		<h2>File Column Headers</h2>
@@ -1488,13 +1406,13 @@ function Help ($Username, $Hostname, $RemoteDir, $Bookmarks) {
 		
 		<h2>File Operations</h2>
 		<blockquote>
-		<table cellpadding="5">
-			<tr valign="top"><td><b><img src="images/dirdel.gif" border="0" alt="Dir Delete"></b></td><td>Deletes the directory. If the directory contains any files or other directories then those will be deleted too.</td></tr>
-			<tr valign="top"><td><b><img src="images/filedel.gif" border="0" alt="File Delete"></b></td><td>Deletes the file.</td></tr>
-			<tr valign="top"><td><b><img src="images/dirmove.gif" border="0" alt="Dir Move"></b></td><td>Move or rename the directory. See Moving/Renaming for more info.</td></tr>
-			<tr valign="top"><td><b><img src="images/filemove.gif" border="0" alt="File Move"></b></td><td>Move or rename the file. See Moving/Renaming for more info.</td></tr>
-			<tr valign="top"><td><b>Delete</b></td><td>Clicking the button will delete all selected files.</td></tr>
-			<tr valign="top"><td><b>Move</b></td><td>Clicking the button will allow you to move all selected files.</td></tr>
+		<table cellpadding=\"5\">
+			<tr valign=\"top\"><td><b><img src=\"images/dirdel.gif\" border=\"0\" alt=\"Dir Delete\"></b></td><td>Deletes the directory. If the directory contains any files or other directories then those will be deleted too.</td></tr>
+			<tr valign=\"top\"><td><b><img src=\"images/filedel.gif\" border=\"0\" alt=\"File Delete\"></b></td><td>Deletes the file.</td></tr>
+			<tr valign=\"top\"><td><b><img src=\"images/dirmove.gif\" border=\"0\" alt=\"Dir Move\"></b></td><td>Move or rename the directory. See Moving/Renaming for more info.</td></tr>
+			<tr valign=\"top\"><td><b><img src=\"images/filemove.gif\" border=\"0\" alt=\"File Move\"></b></td><td>Move or rename the file. See Moving/Renaming for more info.</td></tr>
+			<tr valign=\"top\"><td><b>Delete</b></td><td>Clicking the button will delete all selected files.</td></tr>
+			<tr valign=\"top\"><td><b>Move</b></td><td>Clicking the button will allow you to move all selected files.</td></tr>
 		</table>
 		</blockquote>
 		
@@ -1505,6 +1423,7 @@ function Help ($Username, $Hostname, $RemoteDir, $Bookmarks) {
 		</td></tr>
 		</table>
 		</center>
-		<br><br>
-	<?
+		<br><br>";
 }
+
+?>
